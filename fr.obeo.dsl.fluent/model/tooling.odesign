@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.obeo.fr/dsl/viewpoint/description/1.1.0" xmlns:style="http://www.obeo.fr/dsl/viewpoint/description/style/1.1.0" name="Tooling">
+  <eAnnotations source="Migration">
+    <details key="SemanticCandidatesExpressionBehaviorChange" value=""/>
+  </eAnnotations>
+  <ownedViewpoints name="Design" modelFileExtension="xmi">
+    <ownedRepresentations xsi:type="description:DiagramDescription" showOnStartup="true" domainClass="Flow">
+      <defaultLayer name="Default">
+        <nodeMappings name="Step" domainClass="fluent.Step">
+          <style xsi:type="style:BundledImageDescription" showIcon="false" labelExpression="ocl:name" shape="dot">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
+          </style>
+        </nodeMappings>
+        <edgeMappings name="Transition" semanticElements="&lt;%self + eAllContents%>" sourceMapping="//@ownedViewpoints[name='Design']/@ownedRepresentations[name='']/@defaultLayer/@nodeMappings[name='Step']" targetMapping="//@ownedViewpoints[name='Design']/@ownedRepresentations[name='']/@defaultLayer/@nodeMappings[name='Step']" targetFinderExpression="ocl:next" sourceFinderExpression="ocl:previous" domainClass="fluent.Transition" useDomainElement="true">
+          <style showIcon="false" labelExpression="ocl:name" sizeComputationExpression="2">
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='blue']"/>
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='blue']"/>
+          </style>
+        </edgeMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+  </ownedViewpoints>
+</description:Group>

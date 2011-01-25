@@ -23,21 +23,21 @@ public class TestAPI {
 		URI semResource = null;
 
 		DesignerBot workspace = new DesignerBot();
-		SelectedProject prj = workspace.project("my").create();
+		workspace.project("my.project.od").select().file("myfile.data").delete();
+		SelectedProject prj = workspace.project("my.project.tocreate").create();
 		prj.file("test.aird").create();
 
 		OpenedDiagram diag = prj.sessionFile("my.aird").create()
 				.addSemanticResource(null).addSemanticResource(null)
-				.selectSemanticResource("coucou.ecore").selectObject("machin")
-				.createNewDiagram("myDiag");
+				.selectSemanticResource("hello.ecore").selectObject("foo")
+				.createNewDiagram("my foo diagram");
 
-		DiagramElementSelection diagElement = diag.findDiagramElement("my");
+		DiagramElementSelection diagElement = diag.findDiagramElement("bar element");
 
 		diagElement.pin();
-		diagElement.editLabel("nouveau nom");
+		diagElement.editLabel("bar has been renamed");
 		diagElement.delete();
 
-		diagElement.dragTo(diag.findDiagramElement("e").editPart());
 		diag.palette().tool("EClass").clickOn(diagElement.editPart());
 
 	}

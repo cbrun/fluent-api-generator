@@ -1,0 +1,180 @@
+[comment encoding = UTF-8 /]
+[module generate('/fr.obeo.dsl.fluent/model/fluent.ecore')/]
+
+[template public generate(flow : Flow)]
+	[comment @main /]
+	 
+	[file (genPath(flow).concat(flow.contextDataClassName()).concat('.java'), false, 'UTF-8')]
+	package [namespace/];
+	import java.util.Collection;
+    [genContextDataClass()/]
+    [/file] 
+    
+	[file (genPath(flow).concat(flow.interfaceName()).concat('.java'), false, 'UTF-8')]
+	package [namespace/];
+	
+    import java.util.Collection;
+    public class [flow.interfaceName()/]  {
+    
+    private [contextDataClassName()/] ctx = new [contextDataClassName()/]();
+    
+    [if (not flow.initial.oclIsUndefined())]
+        [flow.initial.removeDoubles().toFieldDeclarations()/]
+    	[flow.initial.stepClassContent()/]
+    [/if]
+    
+    }
+	
+	[/file] 
+	
+	[for (step : Step | eAllContents(Step))]
+    
+      [file (genPath(flow).concat(interfaceName()).concat('.java'), false, 'UTF-8')]
+      package [flow.namespace/];
+      
+      [genStepClassContent(step)/]
+    	[/file]
+    [/for] 
+	
+[/template]
+
+
+[template public genStepClassContent(step : Step) ? (identification <> null)]
+public class [interfaceName()/]{
+      
+      private [eContainer(Flow).contextDataClassName()/] ctx;
+      
+      private  [identification.instanceClassName/] id;
+      
+      [removeDoubles().toFieldDeclarations()/]
+      
+      public [interfaceName()/]([eContainer(Flow).contextDataClassName()/] ctx,[identification. instanceClassName/] id) {
+      	this.ctx = ctx;
+      	this.id = id;
+      }
+      
+      [step.stepClassContent()/]
+      
+      } 
+[/template]
+
+[template public genStepClassContent(step : Step) ]
+public class [interfaceName()/]{
+      
+      private [eContainer(Flow).contextDataClassName()/] ctx;
+      
+      [removeDoubles().toFieldDeclarations()/]
+      
+      public [interfaceName()/]([eContainer(Flow).contextDataClassName()/] ctx) {
+      	this.ctx = ctx;
+      }
+      
+      [stepClassContent()/]
+      
+      } 
+[/template]
+
+
+[template public genContextDataClass (flow : Flow)  ]
+public class [flow.contextDataClassName()/] {
+    
+    [for (step : Step | eAllContents(Step))]
+    
+		[if (step.identification <> null)]
+	         public [interfaceName()/] create[interfaceName()/]([identification.instanceClassName/] id) {
+	           [interfaceName()/] built= new [interfaceName()/](this,id);
+	           return built;
+	         }
+	         
+		      public [interfaceName()/] get[name/]ById([identification.instanceClassName/] id) {
+		      //TODO
+		      return null;
+		      }
+		
+		[else]
+			 public [interfaceName()/] create[interfaceName()/]() {
+	           [interfaceName()/] built= new [interfaceName()/](this);
+	           return built;
+	          }
+	               	
+		[/if]
+		
+    [/for] 
+    }
+[/template]
+
+
+
+[template public stepClassContent (step : Step) ]
+      [for (t : Transition | outgoingTransitions)]
+      
+      public [t.next.qualifiedInterfaceName()/] [t.name/]([t.parameters.parametersDeclaration()->sep(',')/]) {
+        [for (p : Parameter | parameters)]
+        	this.[p.fieldName()/] = [p.name/]; 
+        [/for]
+      	[if (t.next <> t.previous)]
+      	[if (t.next.identification <> null)]
+      		 [t.next.identification. instanceClassName/] nextId = null;
+      		 // TODO find/compute Id
+      	     return ctx.create[t.next.interfaceName()/](nextId);
+      		[else]
+      	    return ctx.create[t.next.interfaceName()/]();
+      	[/if]
+      	[else]      
+      	return this;
+      	[/if]
+      }      	
+      [/for]
+      
+      [for (ref : Reference | outgoingReferences)]
+      	
+      	public [ref.next.qualifiedInterfaceName()/] [ref.name/]([ref.parameters.parametersDeclaration()->sep(',')/]) {
+      	   [ref.next.qualifiedInterfaceName()/] [ref.next.name/] = null; 
+      	   // TODO fill the code!
+      	   return [ref.next.name/];
+      	}
+      [/for]
+[/template]
+
+[template public toInitialStep (flow : Flow) ]
+[if (not flow.initial.oclIsUndefined())]implements [flow.initial.qualifiedInterfaceName()/]	
+[/if]
+
+[/template]
+
+
+[template public doc(element : Parameter)]
+ * @param [doc/].
+[/template]
+
+[query public removeDoubles(step : Step) : Sequence(Parameter) = step.outgoingTransitions.parameters->flatten()->iterate(element : fluent::Parameter ; res : Sequence(fluent::Parameter) = Sequence{} | if (res->exists(name = element.name)) then res else res->including(element) endif) /]
+
+[query public interfaceName(f : Flow) : String = self.name.toUpperFirst() /]
+
+[query public contextDataClassName(f : Flow) : String = self.name.toUpperFirst().concat('ContextData') /]
+
+[query public genPath(f : Flow) : String = self.namespace.replaceAll('\\.','/').concat('/') /]
+
+[query public interfaceName(s : Step) : String = self.name.toUpperFirst() /]
+
+[query public fieldName(p : Parameter) : String = self.name /]
+
+[query public implementationName(s : Step) : String = self.name.toUpperFirst().concat('Impl') /]
+
+
+[template public qualifiedInterfaceName(f : Step)]
+[self.eContainer(Flow).oclAsType(Flow).namespace.concat('.').concat(f.name.toUpperFirst()) /]
+[/template]
+
+[template public qualifiedInterfaceName(f : DataType)]
+	[instanceClassName/]
+[/template]
+
+[template public parametersDeclaration (t : Parameter) ]
+ [t.type.instanceClassName/] [t.name/] 
+[/template]
+
+[template public toFieldDeclarations (parameter : Parameter) ]
+private [parameter.type.instanceClassName/] [name/];
+
+[/template]

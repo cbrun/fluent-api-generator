@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fluent:Flow xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fluent="http://www.obeo.fr/dsl/fluent" xsi:schemaLocation="http://www.obeo.fr/dsl/fluent fluent.ecore" name="DesignerBot" namespace="fr.obeo.dsl.viewpoint.tests.support" initial="//@subNamespaces.1/@steps.0">
+  <steps name="ViewpointSelection">
+    <outgoingTransitions name="enable" next="//@steps.1">
+      <parameters name="viewpointName" type="//@types.1"/>
+    </outgoingTransitions>
+    <outgoingTransitions name="disable" next="//@steps.1">
+      <parameters name="viewpointName" type="//@types.1"/>
+    </outgoingTransitions>
+  </steps>
+  <steps name="SelectedViewpoint">
+    <outgoingTransitions name="activate" next="//@steps.0"/>
+    <outgoingTransitions name="deactivate" next="//@steps.0"/>
+  </steps>
+  <steps name="SelectedSemanticResource" identification="//@types.0">
+    <outgoingTransitions name="remove" next="//@subNamespaces.0/@steps.0"/>
+    <outgoingTransitions name="selectObject" next="//@steps.3">
+      <parameters name="partialName" lowerBound="1" type="//@types.1"/>
+    </outgoingTransitions>
+  </steps>
+  <steps name="SelectedSemanticObject">
+    <outgoingTransitions name="createNewDiagram" next="//@steps.4">
+      <parameters name="diagramName" lowerBound="1" type="//@types.1"/>
+    </outgoingTransitions>
+  </steps>
+  <steps name="OpenedDiagram">
+    <outgoingTransitions name="close" next="//@subNamespaces.0/@steps.0"/>
+    <outgoingTransitions name="layers" next="//@steps.8"/>
+    <outgoingTransitions name="findDiagramElement" next="//@steps.5">
+      <parameters name="partialName" lowerBound="1" type="//@types.1"/>
+    </outgoingTransitions>
+    <outgoingTransitions name="findDiagramElement" next="//@steps.5">
+      <parameters name="targetElement" lowerBound="1" type="//@types.3"/>
+    </outgoingTransitions>
+    <outgoingTransitions name="palette" next="//@steps.6"/>
+    <outgoingReferences name="editPart" next="//@types.4"/>
+  </steps>
+  <steps name="DiagramElementSelection">
+    <outgoingTransitions name="findBorderNode" next="//@steps.5">
+      <parameters name="partialName" lowerBound="1" type="//@types.1"/>
+    </outgoingTransitions>
+    <outgoingTransitions name="editLabel" next="//@steps.5">
+      <parameters name="partialName" lowerBound="1" type="//@types.1"/>
+    </outgoingTransitions>
+    <outgoingTransitions name="hide" next="//@steps.5"/>
+    <outgoingTransitions name="reveal" next="//@steps.5"/>
+    <outgoingTransitions name="pin" next="//@steps.5"/>
+    <outgoingTransitions name="unpin" next="//@steps.5"/>
+    <outgoingTransitions name="delete" next="//@steps.5"/>
+    <outgoingTransitions name="dragTo" next="//@steps.5">
+      <parameters name="editPart" type="//@types.4"/>
+    </outgoingTransitions>
+    <outgoingReferences name="editPart" next="//@types.4"/>
+    <outgoingReferences name="viewpointModel" next="//@types.5"/>
+    <outgoingReferences name="notationModel" next="//@types.6"/>
+  </steps>
+  <steps name="Palette">
+    <outgoingTransitions name="tool" next="//@steps.7">
+      <parameters name="partialName" lowerBound="1" type="//@types.1"/>
+    </outgoingTransitions>
+  </steps>
+  <steps name="SelectedPaletteTool">
+    <outgoingTransitions name="clickOn" next="//@steps.5">
+      <parameters name="editPart" type="//@types.4"/>
+    </outgoingTransitions>
+    <outgoingTransitions name="clickBetween" next="//@steps.5">
+      <parameters name="source" type="//@types.4"/>
+      <parameters name="target" type="//@types.4"/>
+    </outgoingTransitions>
+  </steps>
+  <steps name="LayersManagement">
+    <outgoingTransitions name="enable" next="//@steps.4">
+      <parameters name="name" lowerBound="1" type="//@types.1"/>
+    </outgoingTransitions>
+    <outgoingTransitions name="disable" next="//@steps.4">
+      <parameters name="name" lowerBound="1" type="//@types.1"/>
+    </outgoingTransitions>
+  </steps>
+  <steps name="SelectedLayer">
+    <outgoingTransitions name="activate" next="//@steps.9"/>
+    <outgoingTransitions name="deactivate" next="//@steps.9"/>
+  </steps>
+  <types name="URI" instanceClassName="org.eclipse.emf.common.util.URI"/>
+  <types name="String" instanceClassName="java.lang.String"/>
+  <types name="Session" instanceClassName="org.eclipse.emf.ecore.EObject"/>
+  <types name="EObject" instanceClassName="org.eclipse.emf.common.util.URI"/>
+  <types name="GraphicalEditPart" instanceClassName="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart"/>
+  <types name="DDiagramElement" instanceClassName="fr.obeo.dsl.viewpoint.DDiagramElement"/>
+  <types name="View" instanceClassName="org.eclipse.gmf.runtime.notation.View"/>
+  <subNamespaces namespace="session">
+    <steps name="OpenedSession">
+      <outgoingTransitions name="addSemanticResource" next="//@subNamespaces.0/@steps.0">
+        <parameters name="newResourceURI" lowerBound="1" type="//@types.0"/>
+      </outgoingTransitions>
+      <outgoingTransitions name="selectSemanticResource" next="//@steps.2">
+        <parameters name="partialName" lowerBound="1" type="//@types.1"/>
+      </outgoingTransitions>
+      <outgoingTransitions name="close" next="//@subNamespaces.1/@steps.0"/>
+      <outgoingTransitions name="viewpoints" next="//@steps.0"/>
+      <outgoingReferences name="session" next="//@types.2"/>
+    </steps>
+    <steps name="ClosedSession"/>
+  </subNamespaces>
+  <subNamespaces namespace="workspace">
+    <steps name="WorkspaceBot">
+      <outgoingTransitions name="project" next="//@subNamespaces.1/@steps.1">
+        <parameters name="id" type="//@types.1"/>
+      </outgoingTransitions>
+    </steps>
+    <steps name="ProjectBot">
+      <outgoingTransitions name="create" next="//@subNamespaces.1/@steps.2"/>
+      <outgoingTransitions name="select" next="//@subNamespaces.1/@steps.2"/>
+      <outgoingTransitions name="open" next="//@subNamespaces.1/@steps.1"/>
+      <outgoingTransitions name="close" next="//@subNamespaces.1/@steps.1"/>
+      <outgoingTransitions name="delete" next="//@subNamespaces.1/@steps.0"/>
+    </steps>
+    <steps name="SelectedProject">
+      <outgoingTransitions name="file" next="//@subNamespaces.1/@steps.1">
+        <parameters name="name" type="//@types.1"/>
+      </outgoingTransitions>
+      <outgoingTransitions name="sessionFile" next="//@subNamespaces.1/@steps.4">
+        <parameters name="name" type="//@types.1"/>
+      </outgoingTransitions>
+    </steps>
+    <steps name="FileBot">
+      <outgoingTransitions name="delete" next="//@subNamespaces.1/@steps.1"/>
+    </steps>
+    <steps name="SessionFile">
+      <outgoingTransitions name="open" next="//@subNamespaces.0/@steps.0"/>
+      <outgoingTransitions name="create" next="//@subNamespaces.0/@steps.0"/>
+    </steps>
+  </subNamespaces>
+</fluent:Flow>

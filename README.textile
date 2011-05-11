@@ -4,10 +4,10 @@ This is a set of Eclipse projects including a DSL to represent some API using st
 
 From this :
 
-!fr.obeo.dsl.fluent/doc/fluentmodeler.png!
+!./fr.obeo.dsl.fluent/doc/fluentmodeler.png!
 
 You'll get this code:
 
-!fr.obeo.dsl.fluent/doc/fluentcode.png!
+!./fr.obeo.dsl.fluent/doc/fluentcode.png!
 
 
